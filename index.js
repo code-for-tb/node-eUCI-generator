@@ -1,6 +1,6 @@
 /**
  * Created by chris on 5/15/16.
  */
-var generator = require('./generator');
+module.exports = require('./generator');
 
-console.log(generator.generateUCI("Raúl", "Grünwald", 1, '09/22/1983'));
+//console.log(generator.generate("Raúl", "Grünwald", 1, '09/22/1983'));

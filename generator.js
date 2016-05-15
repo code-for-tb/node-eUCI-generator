@@ -3,28 +3,36 @@
  */
 
 var dateFormat = require('dateformat'),
+
     crypto = require('crypto');
 /**
- * generate a eUCI without running the de-duplication process
+ * generate an eUCI from client information without running de-duplication step.
+ * Because of this, the resulting eUCI is only 40 char's instead of 41 as it is yet to be determined
+ * weather the eUCI is actually unique.
  * @param firstName first name of client as javascript String
  * @param lastName last name of client as javascript String
  * @param gender gender of client 1 = male, 2=female, 3=transgender, 9=unknown
- * @param dob date of birth as javascript Date object
+ * @param dob date of birth as javascript Date object or string
  */
-module.exports.generateUCI = function (firstName, lastName, gender, dob) {
-    if(
-        typeof firstName != 'string' || 
-        typeof lastName != 'string'){
-        throw new Error("invalid first or last name")
+module.exports.generate = function (firstName, lastName, gender, dob) {
+    if(typeof firstName != 'string' || !firstName[0]) { //first name validation
+        throw new Error("Invalid first name")
+    }else if(typeof lastName  != 'string' || !firstName[0]){ //last name validation
+        throw new Error("Invalid last name")
+    }else if(isNaN(gender) || [1, 2, 3, 9].indexOf(gender) == -1){ //gender validation
+        throw new Error("Invalid gender")
+    }else if(dob == null || dob == undefined){ //Date of Birth validation
+        throw new Error("Invalid date");
     }
     var fnfc = firstName[0],
         fntc = firstName[2] || '9',
         lnfc = lastName[0],
         lntc = lastName[2] || '9',
         sdob = dateFormat(dob, 'mmddyy');
-    
+
     var uci = removeDiacritics(fnfc+fntc+lnfc+lntc+sdob+gender).toUpperCase();
-    return uci;
+    var shasum = crypto.createHash('sha1'); //notice: HASH Not Encryption ;-)
+    return shasum.update(uci).digest('hex').toUpperCase();
 };
 
 
