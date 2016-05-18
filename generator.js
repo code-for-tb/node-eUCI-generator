@@ -17,7 +17,7 @@ var dateFormat = require('dateformat'),
 module.exports.generate = function (firstName, lastName, gender, dob) {
     if(typeof firstName != 'string' || !firstName[0]) { //first name validation
         throw new Error("Invalid first name")
-    }else if(typeof lastName  != 'string' || !firstName[0]){ //last name validation
+    }else if(typeof lastName  != 'string' || !lastName[0]){ //last name validation
         throw new Error("Invalid last name")
     }else if(isNaN(gender) || [1, 2, 3, 9].indexOf(gender) == -1){ //gender validation
         throw new Error("Invalid gender")
